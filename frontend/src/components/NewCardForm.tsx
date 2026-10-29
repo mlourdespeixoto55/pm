@@ -1,43 +1,35 @@
 import { useState, type FormEvent } from "react";
 
-const initialFormState = { title: "", details: "" };
-
 type NewCardFormProps = {
   onAdd: (title: string, details: string) => void;
 };
 
 export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [formState, setFormState] = useState(initialFormState);
+  const [draft, setDraft] = useState<{ title: string; details: string } | null>(null);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!formState.title.trim()) {
+    if (!draft?.title.trim()) {
       return;
     }
-    onAdd(formState.title.trim(), formState.details.trim());
-    setFormState(initialFormState);
-    setIsOpen(false);
+    onAdd(draft.title.trim(), draft.details.trim());
+    setDraft(null);
   };
 
   return (
     <div className="mt-4">
-      {isOpen ? (
+      {draft ? (
         <form onSubmit={handleSubmit} className="space-y-3">
           <input
-            value={formState.title}
-            onChange={(event) =>
-              setFormState((prev) => ({ ...prev, title: event.target.value }))
-            }
+            value={draft.title}
+            onChange={(event) => setDraft({ ...draft, title: event.target.value })}
             placeholder="Card title"
             className="w-full rounded-xl border border-[var(--stroke)] bg-white px-3 py-2 text-sm font-medium text-[var(--navy-dark)] outline-none transition focus:border-[var(--primary-blue)]"
             required
           />
           <textarea
-            value={formState.details}
-            onChange={(event) =>
-              setFormState((prev) => ({ ...prev, details: event.target.value }))
-            }
+            value={draft.details}
+            onChange={(event) => setDraft({ ...draft, details: event.target.value })}
             placeholder="Details"
             rows={3}
             className="w-full resize-none rounded-xl border border-[var(--stroke)] bg-white px-3 py-2 text-sm text-[var(--gray-text)] outline-none transition focus:border-[var(--primary-blue)]"
@@ -51,10 +43,7 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
             </button>
             <button
               type="button"
-              onClick={() => {
-                setIsOpen(false);
-                setFormState(initialFormState);
-              }}
+              onClick={() => setDraft(null)}
               className="rounded-full border border-[var(--stroke)] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--gray-text)] transition hover:text-[var(--navy-dark)]"
             >
               Cancel
@@ -64,7 +53,7 @@ export const NewCardForm = ({ onAdd }: NewCardFormProps) => {
       ) : (
         <button
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => setDraft({ title: "", details: "" })}
           className="w-full rounded-full border border-dashed border-[var(--stroke)] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--primary-blue)] transition hover:border-[var(--primary-blue)]"
         >
           Add a card

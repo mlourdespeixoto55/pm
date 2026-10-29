@@ -8,11 +8,11 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     globals: true,
+    unstubGlobals: true,
     coverage: {
       reporter: ["text", "html"],
     },
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
-    exclude: ["node_modules", "tests"],
   },
   resolve: {
     alias: {

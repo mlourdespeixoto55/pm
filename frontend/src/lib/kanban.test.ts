@@ -22,4 +22,9 @@ describe("moveCard", () => {
     expect(result[0].cardIds).toEqual(["card-2"]);
     expect(result[1].cardIds).toEqual(["card-3", "card-1"]);
   });
+
+  it("drops cards to the end of their own column", () => {
+    const result = moveCard(baseColumns, "card-1", "col-a");
+    expect(result[0].cardIds).toEqual(["card-2", "card-1"]);
+  });
 });
